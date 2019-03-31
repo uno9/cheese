@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>運命のお時間です</title>
+
+    <link rel="stylesheet" href="../cheese_academy_original/css/cheese_srot.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <header class="header">
+        <h1>運命のお時間です!!</h1>
+    </header>
+
+    <main>
+        <div class="srot">
+            <!-- border="0"：枠線が出ない -->
+            <table border="0" align="center" class="srot_box">
+                <tr id="text">
+                    <td id="spin_0">C</td>
+                    <td id="spin_1">C</td>
+                    <td id="spin_2">C</td>
+                </tr>
+
+                <tr>
+                    <!-- stopという関数をbuttonを押すと実行する -->
+                    <td><input type="button" value="Stop!" onclick="stop();"></td>
+                    <td><input type="button" value="Stop!" onclick="stop();"></td>
+                    <td><input type="button" value="Stop!" onclick="stop();"></td>
+                </tr>
+            </table>
+        </div>
+
+        <script src="jquery-3.3.1.min .js">
+        </script>
+
+        <script>
+            var i = 0,
+                //splitで配列内の文字列を一つずつ区切る
+                // チ　ー　ズ
+                usetext = "チーズ".split(''),
+                r = [],
+                //function spinを実行するところ
+                timerId;
+
+            //リプレイ
+            function replay() {
+                // スタート時にpの内容を非表示にする
+                $("p").hide();
+                i = 0;
+                r = [];
+                spin();
+            }
+
+            function go() {
+                location.href = "http://localhost//cheese_academy_original/cheese.php"
+            }
+
+            //スロット
+            function spin() {
+                //spin_がどれもころ全てが範囲+それぞれの配列（0,1,2）
+                // usetextで区切った数だけ MathRandom で適当な数字を表示
+                //→チ＝０　ー＝１　ズ＝２
+                $('#spin_' + i).text(usetext[Math.floor(Math.random() * usetext.length)]);
+                // スロットの回転スピード(数が多いと遅い)
+                timerId = setTimeout(spin, 200);
+            }
+            //spin実行
+            spin();
+
+            //スロットを止める
+            function stop() {
+                r[i] = $('#spin_' + i).text();
+                i++;
+                if (i > 2) {
+                    clearTimeout(timerId);
+                    r.sort();
+                    if (r[0] == r[1] && r[0] == r[2]) {
+                        //0=1=2ならBINGO
+                        alert('BINGOOOOO!');
+                        $("table").after('<p><input  type="button" value="次のページへ" onclick="go();"></p>')
+
+
+                    } else if (r[0] == r[1] || r[1] == r[2] || r[0] == r[2]) {
+                        //0=1　か　1=2　か　0=2なら２つ揃い(惜しい！)
+                        alert('2つ揃った！目指せBINGO!');
+                        $("table").after('<p><input type="button" value="リプレイする?" onclick="replay();"></p>');
+
+                    } else {
+                        //どれもそろわなかった…
+                        alert('・・・もう一回試す？');
+                        $("table").after('<p><input type="button" value="リプレイする?" onclick="replay();"></p>');
+
+                    }
+                }
+            }    
+        </script>
+    </main>
+</body>
+
+</html>
